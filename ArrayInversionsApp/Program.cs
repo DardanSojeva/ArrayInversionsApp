@@ -12,6 +12,7 @@ namespace ArrayInversionsApp
         {
             Console.Read();
             Console.Write("test");
+            Console.Write("test");
         }
         // Kerkesa ne projekt -  
         // duhet krijuar teknika Sundo dhe Percaj permes se ciles gjinden inverzionet e arrayit te dhene
