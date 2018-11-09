@@ -10,119 +10,132 @@ namespace ArrayInversionsApp
     {
         static void Main(string[] args)
         {
-            
-            int[] Array_Pasortuar = new int[] { 1, 5, 8, 3, 2 };
-       
-            Console.Write("Array i pasortuar: ");
-            Console.Write("[ ");
+            //Fillimi:   
+            Console.WriteLine("Sheno numrin e anetareve te array-it: ");
+            int NumriAnetareveArray = int.Parse(Console.ReadLine());
+            int[] Array_Pasortuar = new int[NumriAnetareveArray];
+            for(int i=0;i<NumriAnetareveArray; i++)
+            {
+                Console.Write("Anetari ["+i+"]:");
+                Array_Pasortuar[i] = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine("====================================");
+            Console.Write("\nArray i pasortuar:");
+            Console.Write("[");
             foreach (var item in Array_Pasortuar)
             {
-                Console.Write(item.ToString()+" ");
+                Console.Write(item.ToString() + " ");
             }
-            Console.Write("]\n");
-            Console.Write("\n");
-            //int[] Array_Sortuar = new int[] { 5 };
+
+            Console.Write("]\n\n");
             int inversionet;
             int[] Array_Sortuar = MergeSort(Array_Pasortuar, out inversionet );
-            Console.Write("Array i sortuar:    ");
-            Console.Write("[ ");
+            Console.Write("Array i sortuar:  ");
+            Console.Write("[");
             foreach (var item in Array_Sortuar)
             {
                 Console.Write(item.ToString()+" ");
             }
             Console.Write("]");
+            Console.Write("\n\n");
+            Console.WriteLine("====================================");
+            Console.Write("Në array-in e dhënë kemi " + inversionet+" inverzione");
             Console.Write("\n");
-            Console.Write("Numri i inversioneve: ");
-            Console.Write(inversionet);
-            Console.Write("\n");
-            Console.Write("Inversionet =");
-            PrintInversionet(Array_Sortuar);
-            Console.Read();
-            
+            Console.ReadLine();
+            //int perfundo = int.Parse(Console.ReadLine());
+            //Console.WriteLine("Shtypni numrin 0 per te perseritur, 1- per dalje nga programi");
+            //if(perfundo != 0)
+            //{
+            //    goto Fillimi;
+            //} 
+            //else
+            //{
+            //    Console.WriteLine("Ju keni zgjedhur daljen!");
+            //}
         }
 
-
-        public static void PrintInversionet(int[] array_hyres)
-        {
-           for(int i = 1; i < 5; i++)
-            {
-                for (int ii = i + 1; ii < 5; ii++)
-                {
-                    if (array_hyres[i] > array_hyres[ii])
-                        Console.Write(array_hyres[i]);
-                }
-            }
+        //public static void PrintInversionet(int[] array_hyres)
+        //{
+        //   for(int i = 1; i < 5; i++)
+        //    {
+        //        for (int ii = i + 1; ii < 5; ii++)
+        //        {
+        //            if (array_hyres[i] > array_hyres[ii])
+        //                Console.Write(array_hyres[i]);
+        //        }
+        //    }
                 
-        }
-
-        public static int[] MergeSort(int[] A, out int inversionsCount)
+        //}
+        public static int[] MergeSort(int[] A, out int NumroInversionet)
         {
-            inversionsCount = 0;
+            NumroInversionet = 0;
 
-            int[] sortedArray;
+            int[] ArrayiSortuar;
             if (A.Length == 1)
-                sortedArray = A;
-            //If the length of input array is greater than one
+                ArrayiSortuar = A;
+            //Nese numri i anetareve te array-it hyres eshte me i madhe se 1
             else
             {
-                int lowerArrayInversionsCount = 0, upperArrayInversionsCount = 0;
+                int GjysmaPareNumroInversionet = 0;
+                int GjysmaDyteNumroInversionet = 0;
 
-                int lowerArrayIndex = 0, upperArrayIndex = 0;
+                int ArrayPareIndex = 0, ArrayDyteIndex = 0;
 
-                //Split the array into lower half
-                int[] lowerArray = new int[A.Length / 2];
-                Array.Copy(A, lowerArray, lowerArray.Length);
+                //Ndaj arrayin ne dy gjysma / gjysma e pare - Divide
+                int[] GjysmaPareArrayit = new int[A.Length / 2];
+                Array.Copy(A, GjysmaPareArrayit, GjysmaPareArrayit.Length);
 
-                //Which will be sorted recursively
-                lowerArray = MergeSort(lowerArray, out lowerArrayInversionsCount);
+                //Gjysma e pare do te sortohet ne menyre rekursive
+                GjysmaPareArrayit = MergeSort(GjysmaPareArrayit, out GjysmaPareNumroInversionet);
 
-                //And upper half
-                int[] upperArray = new int[A.Length - lowerArray.Length];
-                Array.Copy(A, lowerArray.Length, upperArray, 0, upperArray.Length);
+                //Ndaj arrayin ne dy gjysma / gjysma e dyte 
+                int[] GjysmaDyteArrayit = new int[A.Length - GjysmaPareArrayit.Length];
+                Array.Copy(A, GjysmaPareArrayit.Length, GjysmaDyteArrayit, 0, GjysmaDyteArrayit.Length);
 
-                //Which also will be sorted recursively
-                upperArray = MergeSort(upperArray, out upperArrayInversionsCount);
-                inversionsCount = lowerArrayInversionsCount + upperArrayInversionsCount;
+                //Gjysma e dyte do te sortohet gjithashtu ne menyre rekursive
+                GjysmaDyteArrayit = MergeSort(GjysmaDyteArrayit, out GjysmaDyteNumroInversionet);
 
-                //The sorted array is a result of proper merging of the lower and upper half
-                sortedArray = new int[A.Length];
-                lowerArrayIndex = 0;
-                upperArrayIndex = 0;
+                // Numero te gjitha inversionet ne arrayin e dhene ( nga dy gjysmat )
+                NumroInversionet = GjysmaPareNumroInversionet + GjysmaDyteNumroInversionet;
 
-                //For all the elements
-                for (int sortedArrayIndex = 0; sortedArrayIndex < sortedArray.Length; sortedArrayIndex++)
+                // Arrayi sortuar eshte rezultat i MergeSorting adekuat te dy gjysmave
+                ArrayiSortuar = new int[A.Length];
+                ArrayPareIndex = 0;
+                ArrayDyteIndex = 0;
+
+                //Per te gjitha elementet
+                for (int ArrayiSortuarIndex = 0; ArrayiSortuarIndex < ArrayiSortuar.Length; ArrayiSortuarIndex++)
                 {
-                    //If all the elements from lower half has been copied
-                    if (lowerArrayIndex == lowerArray.Length)
+                    //Nese elementet e gjyses se pare nuk jane kopjuar
+                    if (ArrayPareIndex == GjysmaPareArrayit.Length)
 
-                        //Copy the element from upper half
-                        sortedArray[sortedArrayIndex] = upperArray[upperArrayIndex++];
+                        //Kopjo elementet prej gjysmes se dyte
+                        ArrayiSortuar[ArrayiSortuarIndex] = GjysmaDyteArrayit[ArrayDyteIndex++];
 
-                    //If all the elements from upper half has been copied
-                    else if (upperArrayIndex == upperArray.Length)
+                    //Ne qofte se elementet nga gjysma e dyte e arrayit nuk jane kopjuar
+                    else if (ArrayDyteIndex == GjysmaDyteArrayit.Length)
 
-                        //Copy the element from lower half
-                        sortedArray[sortedArrayIndex] = lowerArray[lowerArrayIndex++];
+                        //Kopjo elementet prej gjysmes se pare
+                        ArrayiSortuar[ArrayiSortuarIndex] = GjysmaPareArrayit[ArrayPareIndex++];
+                    // Nese elementi aktual ne gjysem e pare eshte me i vogel apo barazi me elementin aktual (homolog) ne gjysmes e dyte
+                    else if (GjysmaPareArrayit[ArrayPareIndex] <= GjysmaDyteArrayit[ArrayDyteIndex])
 
-                    //If the current element in lower half is less or equal than current element in upper half
-                    else if (lowerArray[lowerArrayIndex] <= upperArray[upperArrayIndex])
+                        //Kopjo elementet nga gjysma e pare
+                        ArrayiSortuar[ArrayiSortuarIndex] = GjysmaPareArrayit[ArrayPareIndex++];
 
-                        //Copy the element from lower half
-                        sortedArray[sortedArrayIndex] = lowerArray[lowerArrayIndex++];
-
-                    //In any other case
+                    //Ne raste te tjera
                     else
                     {
-                        //Copy the element from upper half
-                        sortedArray[sortedArrayIndex] = upperArray[upperArrayIndex++];
+                        //Kopjo elementet prej gjysmes se dyte
+                        ArrayiSortuar[ArrayiSortuarIndex] = GjysmaDyteArrayit[ArrayDyteIndex++];
 
-                        //And count the inversions
-                        inversionsCount += lowerArray.Length - lowerArrayIndex;
+                        //Numro inversionet
+                        NumroInversionet += GjysmaPareArrayit.Length - ArrayPareIndex;
                     }
                 }
             }
-
-            return sortedArray;
+            // Kthe numrin e inversioneve
+            return ArrayiSortuar;
 
         }
 
